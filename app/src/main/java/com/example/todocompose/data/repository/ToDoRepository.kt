@@ -3,9 +3,11 @@ package com.example.todocompose.data.repository
 import androidx.room.Dao
 import com.example.todocompose.data.dao.TodoTaskDao
 import com.example.todocompose.data.model.ToDoTaskEntity
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
+@ViewModelScoped
 class ToDoRepository @Inject constructor(
     private val toDoTaskDao: TodoTaskDao
 ) {

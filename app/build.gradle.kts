@@ -60,6 +60,9 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
+    // compose navigation
+    implementation(libs.androidx.navigation.compose)
+
     // room
     implementation(libs.androidx.room.runtime)
     kapt(libs.androidx.room.compiler)
