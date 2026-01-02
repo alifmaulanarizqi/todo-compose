@@ -1,7 +1,6 @@
 package com.example.todocompose.ui.screen.list
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.text.KeyboardActions
@@ -42,22 +41,40 @@ import com.example.todocompose.component.PriorityItem
 import com.example.todocompose.data.model.Priority
 import com.example.todocompose.ui.theme.LARGE_PADDING
 import com.example.todocompose.ui.theme.TONAL_APP_BAR_ELEVATION
-import com.example.todocompose.ui.theme.TOP_APP_BAR_HEIGHT
+import com.example.todocompose.ui.viewmodel.SharedViewModel
+import com.example.todocompose.util.SearchAppBarState
+import com.example.todocompose.util.TrailingIconState
 
 @Composable
-fun ListAppBar() {
-//    DefaultListAppBar(
-//        onSearchClicked = { },
-//        onSortClicked = { },
-//        onDeleteClicked = {},
-//    )
-
-    SearchAppBar(
-        text = "",
-        onTextChange = {},
-        onCloseClicked = {},
-        onSearchClicked = {}
-    )
+fun ListAppBar(
+    sharedViewModel: SharedViewModel,
+    searchAppBarState: SearchAppBarState,
+    searchTextState: String
+) {
+    when(searchAppBarState) {
+        SearchAppBarState.CLOSED -> {
+            DefaultListAppBar(
+                onSearchClicked = {
+                    sharedViewModel.searchAppBarState.value = SearchAppBarState.OPENED
+                },
+                onSortClicked = { },
+                onDeleteClicked = {},
+            )
+        }
+        else -> {
+            SearchAppBar(
+                text = searchTextState,
+                onTextChange = {
+                    sharedViewModel.searchTextState.value = it
+                },
+                onCloseClicked = {
+                    sharedViewModel.searchAppBarState.value = SearchAppBarState.CLOSED
+                    sharedViewModel.searchTextState.value = ""
+                },
+                onSearchClicked = {}
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -104,7 +121,7 @@ fun SearchAction(
     onSearchClicked: () -> Unit
 ) {
     IconButton(
-        onClick = { onSearchClicked }
+        onClick = { onSearchClicked() }
     ) {
         Icon(
             imageVector = Icons.Filled.Search,
@@ -218,6 +235,8 @@ fun SearchAppBar(
     onCloseClicked: () -> Unit,
     onSearchClicked: (String) -> Unit
 ) {
+    var trailingIconState by remember { mutableStateOf(TrailingIconState.READY_TO_DELETE) }
+
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -264,7 +283,22 @@ fun SearchAppBar(
             },
             trailingIcon = {
                 IconButton(
-                    onClick = { onCloseClicked() }
+                    onClick = {
+                        when(trailingIconState) {
+                            TrailingIconState.READY_TO_DELETE -> {
+                                onTextChange("")
+                                trailingIconState = TrailingIconState.READY_TO_CLOSE
+                            }
+                            TrailingIconState.READY_TO_CLOSE -> {
+                                if(text.isNotEmpty()) {
+                                    onTextChange("")
+                                } else {
+                                    onCloseClicked()
+                                    trailingIconState = TrailingIconState.READY_TO_DELETE
+                                }
+                            }
+                        }
+                    }
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Close,
