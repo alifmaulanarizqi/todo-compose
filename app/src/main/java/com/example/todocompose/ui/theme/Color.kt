@@ -1,5 +1,8 @@
 package com.example.todocompose.ui.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)
@@ -14,3 +17,15 @@ val LowPriorityColor = Color(0xFF00C980)
 val MediumPriorityColor = Color(0xFFFFC114)
 val HighPriorityColor = Color(0xFFFF4646)
 val NonePriorityColor = Color(0xFFFFFFFF)
+
+val LightGrey = Color(0xFFFCFCFC)
+val MediumGrey = Color(0xFF9C9C9C)
+val DarkGrey = Color(0xFF141414)
+
+val ColorScheme.topAppBarContentColor: Color
+    @Composable
+    get() = if(isSystemInDarkTheme()) LightGrey else Color.White
+
+val ColorScheme.topAppBarBackgroundColor: Color
+    @Composable
+    get() = if(isSystemInDarkTheme()) Color.Black else Purple40
