@@ -23,13 +23,15 @@ fun ListScreen(
     val searchTextState: String by sharedViewModel.searchTextState
 
     Scaffold(
-        content = {},
         topBar = {
             ListAppBar(
                 sharedViewModel = sharedViewModel,
                 searchAppBarState = searchAppBarState,
                 searchTextState = searchTextState
             )
+        },
+        content = {
+            ListContent()
         },
         floatingActionButton = {
             ListFab(navigateToTaskScreen)
