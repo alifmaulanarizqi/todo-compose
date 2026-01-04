@@ -29,21 +29,24 @@ import com.example.todocompose.ui.theme.PRIORITY_INDICATOR_SIZE
 import com.example.todocompose.ui.theme.TASK_ITEM_ELEVATION
 import com.example.todocompose.ui.theme.taskItemBackgroundColor
 import com.example.todocompose.ui.theme.taskItemTextColor
+import com.example.todocompose.util.RequestState
 
 @Composable
 fun ListContent(
-    tasks: List<ToDoTaskEntity> = emptyList(),
+    tasks: RequestState<List<ToDoTaskEntity>>,
     navigateToTaskScreen: (taskId: Int) -> Unit,
     paddingValues: PaddingValues = PaddingValues()
 ) {
-    if(tasks.isEmpty()) {
-        EmptyContent()
-    } else {
-        DisplayTasks(
-            tasks = tasks,
-            navigateToTaskScreen = navigateToTaskScreen,
-            paddingValues = paddingValues
-        )
+    if(tasks is RequestState.Success) {
+        if(tasks.data.isEmpty()) {
+            EmptyContent()
+        } else {
+            DisplayTasks(
+                tasks = tasks.data,
+                navigateToTaskScreen = navigateToTaskScreen,
+                paddingValues = paddingValues
+            )
+        }
     }
 }
 
