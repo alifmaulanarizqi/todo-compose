@@ -36,6 +36,23 @@ fun ListContent(
     navigateToTaskScreen: (taskId: Int) -> Unit,
     paddingValues: PaddingValues = PaddingValues()
 ) {
+    if(tasks.isEmpty()) {
+        EmptyContent()
+    } else {
+        DisplayTasks(
+            tasks = tasks,
+            navigateToTaskScreen = navigateToTaskScreen,
+            paddingValues = paddingValues
+        )
+    }
+}
+
+@Composable
+fun DisplayTasks(
+    tasks: List<ToDoTaskEntity> = emptyList(),
+    navigateToTaskScreen: (taskId: Int) -> Unit,
+    paddingValues: PaddingValues = PaddingValues()
+) {
     LazyColumn(
         modifier = Modifier.padding(paddingValues)
     ) {

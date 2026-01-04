@@ -26,10 +26,8 @@ class SharedViewModel @Inject constructor(
     val searchTextState: MutableState<String> = mutableStateOf("")
 
     fun getAllTask() {
-        Log.d("SharedViewModel", "getAllTask() called")
         viewModelScope.launch {
             repository.getAllTasks.collect { tasks ->
-                Log.d("SharedViewModel", "getAllTask collected: ${tasks.size} tasks")
                 _allTasks.value = tasks
             }
         }
