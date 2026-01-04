@@ -1,13 +1,17 @@
 package com.example.todocompose.ui.screen.list
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,8 +31,26 @@ import com.example.todocompose.ui.theme.taskItemBackgroundColor
 import com.example.todocompose.ui.theme.taskItemTextColor
 
 @Composable
-fun ListContent() {
-    // Tambahkan konten di sini
+fun ListContent(
+    tasks: List<ToDoTaskEntity> = emptyList(),
+    navigateToTaskScreen: (taskId: Int) -> Unit,
+    paddingValues: PaddingValues = PaddingValues()
+) {
+    LazyColumn(
+        modifier = Modifier.padding(paddingValues)
+    ) {
+        items(
+            items = tasks,
+            key = { task ->
+                task.id
+            }
+        ) { task ->
+            TaskItem(
+                toDoTask = task,
+                navigateToTaskScreen = navigateToTaskScreen
+            )
+        }
+    }
 }
 
 @Composable
@@ -38,13 +60,13 @@ fun TaskItem(
 ) {
     Surface(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable {
+                navigateToTaskScreen(toDoTask.id)
+            },
         color = MaterialTheme.colorScheme.taskItemBackgroundColor,
         shape = RectangleShape,
-        elevation = TASK_ITEM_ELEVATION,
-        onClick = {
-            navigateToTaskScreen(toDoTask.id)
-        },
+        shadowElevation = TASK_ITEM_ELEVATION,
     ) {
         Column(
             modifier = Modifier

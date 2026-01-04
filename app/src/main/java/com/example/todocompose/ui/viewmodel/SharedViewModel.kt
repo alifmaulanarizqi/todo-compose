@@ -1,5 +1,6 @@
 package com.example.todocompose.ui.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -25,9 +26,11 @@ class SharedViewModel @Inject constructor(
     val searchTextState: MutableState<String> = mutableStateOf("")
 
     fun getAllTask() {
+        Log.d("SharedViewModel", "getAllTask() called")
         viewModelScope.launch {
-            repository.getAllTasks.collect {
-                _allTasks.value = it
+            repository.getAllTasks.collect { tasks ->
+                Log.d("SharedViewModel", "getAllTask collected: ${tasks.size} tasks")
+                _allTasks.value = tasks
             }
         }
     }

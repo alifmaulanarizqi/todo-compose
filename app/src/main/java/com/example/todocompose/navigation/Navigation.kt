@@ -8,7 +8,6 @@ import com.example.todocompose.navigation.destination.listComposable
 import com.example.todocompose.navigation.destination.taskComposable
 import com.example.todocompose.ui.viewmodel.SharedViewModel
 import com.example.todocompose.util.Action
-import com.example.todocompose.util.Constants.LIST_SCREEN
 
 @Composable
 fun Navigation(

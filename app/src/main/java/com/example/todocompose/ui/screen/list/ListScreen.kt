@@ -1,24 +1,30 @@
 package com.example.todocompose.ui.screen.list
 
-import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import com.example.todocompose.R
 import com.example.todocompose.ui.viewmodel.SharedViewModel
 import com.example.todocompose.util.SearchAppBarState
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ListScreen(
     navigateToTaskScreen: (taskId: Int) -> Unit,
-    sharedViewModel: SharedViewModel
+    sharedViewModel: SharedViewModel,
 ) {
+    LaunchedEffect(Unit) {
+        sharedViewModel.getAllTask()
+    }
+
+    val allTasks by sharedViewModel.allTasks.collectAsState()
     val searchAppBarState: SearchAppBarState by sharedViewModel.searchAppBarState
     val searchTextState: String by sharedViewModel.searchTextState
 
@@ -30,13 +36,16 @@ fun ListScreen(
                 searchTextState = searchTextState
             )
         },
-        content = {
-            ListContent()
-        },
         floatingActionButton = {
             ListFab(navigateToTaskScreen)
         }
-    )
+    ) { paddingValues ->
+        ListContent(
+            tasks = allTasks,
+            navigateToTaskScreen = navigateToTaskScreen,
+            paddingValues = paddingValues
+        )
+    }
 }
 
 @Composable
