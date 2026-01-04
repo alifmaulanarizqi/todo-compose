@@ -6,12 +6,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -37,16 +39,41 @@ fun ListContent(
     navigateToTaskScreen: (taskId: Int) -> Unit,
     paddingValues: PaddingValues = PaddingValues()
 ) {
-    if(tasks is RequestState.Success) {
-        if(tasks.data.isEmpty()) {
-            EmptyContent()
-        } else {
-            DisplayTasks(
-                tasks = tasks.data,
-                navigateToTaskScreen = navigateToTaskScreen,
-                paddingValues = paddingValues
+    when(tasks) {
+        is RequestState.Loading -> {
+            DisplayLoading()
+        }
+        is RequestState.Success -> {
+            if(tasks.data.isEmpty()) {
+                EmptyContent()
+            } else {
+                DisplayTasks(
+                    tasks = tasks.data,
+                    navigateToTaskScreen = navigateToTaskScreen,
+                    paddingValues = paddingValues
+                )
+            }
+        }
+        is RequestState.Error<*> -> {
+            ErrorContent(
+                errorMessage = tasks.error.toString()
             )
         }
+        else -> {}
+    }
+}
+
+@Composable
+fun DisplayLoading(
+    paddingValues: PaddingValues = PaddingValues()
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator()
     }
 }
 
