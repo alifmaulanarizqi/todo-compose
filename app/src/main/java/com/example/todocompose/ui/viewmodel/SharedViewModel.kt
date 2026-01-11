@@ -1,6 +1,5 @@
 package com.example.todocompose.ui.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -26,6 +25,10 @@ class SharedViewModel @Inject constructor(
         SearchAppBarState.CLOSED)
     val searchTextState: MutableState<String> = mutableStateOf("")
 
+    private val _selectedTask: MutableStateFlow<ToDoTaskEntity?> = MutableStateFlow(null)
+    val selectedTask: MutableStateFlow<ToDoTaskEntity?> = _selectedTask
+
+
     fun getAllTask() {
         _allTasks.value = RequestState.Loading
 
@@ -39,5 +42,13 @@ class SharedViewModel @Inject constructor(
             _allTasks.value = RequestState.Error(e)
         }
 
+    }
+
+    fun getSelectedTask(taskId: Int) {
+        viewModelScope.launch {
+            repository.getSelectedTask(taskId).collect { task ->
+                _selectedTask.value = task
+            }
+        }
     }
 }

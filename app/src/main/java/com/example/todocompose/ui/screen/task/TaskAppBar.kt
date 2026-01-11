@@ -25,11 +25,20 @@ import com.example.todocompose.data.model.ToDoTaskEntity
 
 @Composable
 fun TaskAppBar(
-    navigateToListScreen: (Action) -> Unit
+    navigateToListScreen: (Action) -> Unit,
+    selectedTask: ToDoTaskEntity?
 ) {
-    NewTaskAppBar(
-        navigateToListScreen = navigateToListScreen
-    )
+    if(selectedTask == null) {
+        NewTaskAppBar(
+            navigateToListScreen = navigateToListScreen
+        )
+    } else {
+        ExistingTaskAppBar(
+            selectedTask = selectedTask,
+            navigateToListScreen = navigateToListScreen
+        )
+    }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -98,7 +107,7 @@ fun AddAction(
 @Composable
 fun ExistingTaskAppBar(
     navigateToListScreen: (Action) -> Unit,
-    selectedTaskTitle: ToDoTaskEntity
+    selectedTask: ToDoTaskEntity
 ) {
     TopAppBar(
         navigationIcon = {
@@ -108,7 +117,7 @@ fun ExistingTaskAppBar(
         },
         title = {
             Text(
-                text = selectedTaskTitle.title,
+                text = selectedTask.title,
                 color = MaterialTheme.colorScheme.topAppBarContentColor,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -172,7 +181,7 @@ fun UpdateAction(
         }
     ) {
         Icon(
-            imageVector = Icons.Filled.Close,
+            imageVector = Icons.Filled.Check,
             contentDescription = stringResource(R.string.update_icon),
             tint = MaterialTheme.colorScheme.topAppBarContentColor
         )
@@ -192,7 +201,7 @@ private fun NewTaskAppBarPreview() {
 private fun ExistingTaskAppBarPreview() {
     ExistingTaskAppBar(
         navigateToListScreen = {},
-        selectedTaskTitle = ToDoTaskEntity(
+        selectedTask = ToDoTaskEntity(
             id = 0,
             title = "Task Title",
             description = "Task Description",
