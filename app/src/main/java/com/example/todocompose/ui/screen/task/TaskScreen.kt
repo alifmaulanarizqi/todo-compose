@@ -34,7 +34,7 @@ fun TaskScreen(
                 modifier = Modifier.padding(paddingValues),
                 title = title,
                 onTitleChange = {
-                    sharedViewModel.title.value = it
+                    sharedViewModel.updateTitle(it)
                 },
                 description = description,
                 onDescriptionChange = {
